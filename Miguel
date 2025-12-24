@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Natal - Miguel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f8f7f4;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .snowflake {
+            display: inline-block;
+            margin: 0 15px;
+            font-size: 0.7em;
+            opacity: 0.6;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 50px;
+            font-size: 0.9em;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .postal {
+            perspective: 1500px;
+            margin-bottom: 40px;
+        }
+
+        .postal-inner {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .postal-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .postal-frente, .postal-verso {
+            position: absolute;
+            width: 100%;
+            min-height: 500px;
+            backface-visibility: hidden;
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: white;
+            border: 1px solid #e8e6e3;
+        }
+
+        .postal-verso {
+            background: #2c3e50;
+            color: #ecf0f1;
+            transform: rotateY(180deg);
+        }
+
+        .postal-header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .postal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 1px;
+            background: #bdc3c7;
+        }
+
+        .postal-nome {
+            font-size: 0.75em;
+            opacity: 0.6;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .postal-titulo {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 1.9em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #2c3e50;
+        }
+
+        .postal-icon {
+            font-size: 2.5em;
+            margin: 25px 0;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .postal-enigma {
+            flex-grow: 1;
+            font-size: 0.95em;
+            line-height: 1.8;
+            text-align: left;
+            color: #34495e;
+            font-weight: 300;
+        }
+
+        .postal-enigma strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .postal-footer {
+            text-align: center;
+            font-size: 0.75em;
+            opacity: 0.5;
+            margin-top: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .verso-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .verso-instrucao {
+            font-size: 1em;
+            margin-bottom: 35px;
+            line-height: 1.7;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .resposta-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 2px;
+            padding: 35px;
+            margin: 25px 0;
+            width: 85%;
+        }
+
+        .resposta-label {
+            font-size: 0.85em;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        .resposta-input {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 2.2em;
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: #ecf0f1;
+        }
+
+        .hint {
+            font-size: 0.8em;
+            opacity: 0.6;
+            margin-top: 25px;
+            font-weight: 300;
+        }
+
+        .flip-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .flip-button button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+
+        .flip-button button:hover {
+            background: #34495e;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .postal-frente, .postal-verso {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="snowflake">❄</span> DESAFIO NATAL <span class="snowflake">❄</span></h1>
+        <p class="subtitle">Clica no botão para virar o postal</p>
+
+        <div class="postal">
+            <div class="postal-inner" id="postal">
+                <div class="postal-frente">
+                    <div class="postal-header">
+                        <div class="postal-nome">Para Miguel</div>
+                        <div class="postal-titulo">O Marcador do Estádio</div>
+                    </div>
+                    <div class="postal-icon">🏉</div>
+                    <div class="postal-enigma">
+                        <p>Imagina uma carreira lendária no Rugby.</p><p style="margin-top: 20px;">Um jogador marcou, ao longo da vida, <strong>299 ensaios</strong> (5 pontos cada) e converteu <strong>1 penalidade</strong> (3 pontos).</p><p style="margin-top: 20px;">Se somares todos estes pontos, qual é o recorde final deste jogador?</p>
+                    </div>
+                    <div class="postal-footer">Rugby · Nível Médio</div>
+                </div>
+                <div class="postal-verso">
+                    <div class="verso-content">
+                        <div class="verso-instrucao">
+                            O recorde de pontos é o código que precisas.
+                        </div>
+                        <div class="resposta-box">
+                            <div class="resposta-label">CÁLCULO</div>
+                            <div style="margin: 20px 0; font-size: 1em; opacity: 0.8;">Ensaios: 299 × 5 = ?<br>Penalidade: 1 × 3 = ?</div>
+                            <div class="resposta-label" style="margin-top: 30px;">TOTAL</div>
+                            <div class="resposta-input">[____]</div>
+                        </div>
+                        <div class="hint">Soma todas as pontuações</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-button">
+            <button onclick="flipCard()">VIRAR POSTAL</button>
+        </div>
+    </div>
+
+    <script>
+        function flipCard() {
+            document.getElementById('postal').classList.toggle('flipped');
+        }
+    </script>
+</body>
+</html>
